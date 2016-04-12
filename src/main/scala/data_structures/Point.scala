@@ -28,6 +28,10 @@ case class Point(x: Double, y: Double) extends Ordered[Point] {
     x * that.x + y * that.y
   }
 
+  def /(k: Double): Point = {
+    Point(x/k, y/k)
+  }
+
   def norm: Double = {
     scala.math.sqrt(x * x + y * y)
   }
@@ -39,6 +43,11 @@ case class Point(x: Double, y: Double) extends Ordered[Point] {
   def distEuklid(that: Point): Double = {
     import scala.math._
     sqrt(pow(x - that.x, 2) + pow(y - that.y, 2))
+  }
+
+  def distLeastSquares(that: Point): Double = {
+    import scala.math._
+    pow(x - that.x, 2) + pow(y - that.y, 2)
   }
 
   override def toString: String = s"($x,$y)"
