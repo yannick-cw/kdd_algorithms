@@ -13,7 +13,7 @@ class VarianceMinimizingSpec extends WordSpecLike {
     "cluster multiple points right" in {
       val point1 = Point(1, 1)
       val point2 = Point(0, 0)
-      assert(VarianceMinimizing.cluster(Set(point1, point2), 1) == Set(Set(point1, point2)))
+      assert(VarianceMinimizingLlyod.cluster(Set(point1, point2), 1) == Set(Set(point1, point2)))
 
       val (a,b,c,d,e,f) =
         (Point(0,0),
@@ -24,9 +24,9 @@ class VarianceMinimizingSpec extends WordSpecLike {
           Point(6,6))
 
       val set = Set(d,a,c,f,e,b)
-      assert(VarianceMinimizing.cluster(set, 2) == Set(Set(a,b,c), Set(d,e,f)))
+      assert(VarianceMinimizingLlyod.cluster(set, 2) == Set(Set(a,b,c), Set(d,e,f)))
 
-      assert(VarianceMinimizing.cluster(Set(Point(1,1)), 1) == Set(Set(Point(1,1))))
+      assert(VarianceMinimizingLlyod.cluster(Set(Point(1,1)), 1) == Set(Set(Point(1,1))))
     }
 
   }

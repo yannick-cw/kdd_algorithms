@@ -7,7 +7,7 @@ import scala.math.ceil
   * Based on the variance minimizing algorithm of Lloyd
   * Result can be less than k sets, depending on the initial clustering
   */
-object VarianceMinimizingLloyd extends ExtendedSetPreDef {
+object VarianceMinimizingLlyod extends ExtendedSetPreDef {
 
   def cluster(set: Set[Point], k: Int): Set[Set[Point]] = {
     assert(k <= set.size)
@@ -29,7 +29,7 @@ object VarianceMinimizingLloyd extends ExtendedSetPreDef {
     }
 
 
-    val initialClusters = set.grouped(ceil(set.size.toDouble / k.toDouble).toInt)
+    val initialClusters = set.toList.sorted.toSet.grouped(ceil(set.size.toDouble / k.toDouble).toInt)
     go(initialClusters.map(_ getCentroid()).toSet)
   }
 
