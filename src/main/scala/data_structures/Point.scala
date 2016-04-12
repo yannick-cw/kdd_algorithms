@@ -50,5 +50,10 @@ case class Point(x: Double, y: Double) extends Ordered[Point] {
     pow(x - that.x, 2) + pow(y - that.y, 2)
   }
 
+  def getNearestCentroid(centroids: Set[Point]): Point = {
+    centroids.map(cent => (cent, this.distLeastSquares(cent)))
+      .minBy{case (centroid, dist) => dist}._1
+  }
+
   override def toString: String = s"($x,$y)"
 }

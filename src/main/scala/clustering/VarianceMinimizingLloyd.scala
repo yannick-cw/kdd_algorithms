@@ -9,33 +9,26 @@ import scala.math.ceil
   */
 object VarianceMinimizingLlyod extends ExtendedSetPreDef {
 
-  def cluster(set: Set[Point], k: Int): Set[Set[Point]] = {
+  def cluster(set: Set[Point], k: Int): Map[Point, Set[Point]] = {
     assert(k <= set.size)
 
-    def go(currentCentroids: Set[Point]): Set[Set[Point]] = {
+    def go(currentCentroids: Set[Point]): Map[Point, Set[Point]] = {
       val pointWithCentroidTuple = set.map { point =>
-        (getNearestCentroid(currentCentroids, point), point)
+        (point.getNearestCentroid(currentCentroids), point)
       }
 
       val groupedByMinCent = pointWithCentroidTuple
         .groupBy { case (centroid, point) => centroid }
-        .map{ case (_, centPoint) => centPoint.map{ case(centroid, point) => point}}
-        .toSet
+        .map{ case (c, centPoint) => (c, centPoint.map{ case(centroid, point) => point})}
 
-      val newCentroids: Set[Point] = groupedByMinCent.map(_.getCentroid())
+      val newCentroids: Set[Point] = groupedByMinCent.values.map(_.getCentroid()).toSet
 
       if (newCentroids == currentCentroids) groupedByMinCent
       else go(newCentroids)
     }
 
 
-    val initialClusters = set.toList.sorted.toSet.grouped(ceil(set.size.toDouble / k.toDouble).toInt)
+    val initialClusters = set.grouped(ceil(set.size.toDouble / k.toDouble).toInt)
     go(initialClusters.map(_ getCentroid()).toSet)
-  }
-
-
-  private def getNearestCentroid(centroids: Set[Point], point: Point): Point = {
-    centroids.map(cent => (cent, cent.distLeastSquares(point)))
-      .minBy{case (centroid, dist) => dist}._1
   }
 }

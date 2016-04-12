@@ -6,15 +6,15 @@ import org.scalatest.WordSpecLike
 /**
   * Created by yannick on 12.04.16.
   */
-class VarianceMinimizingSpec extends WordSpecLike {
+class kMeansSpec extends WordSpecLike {
 
-  "VarianceMinimizingSpec" must {
+  "kMeansSpec" should {
 
-    "cluster multiple points right" in {
+    "cluster" in {
       val point1 = Point(1, 1)
       val point2 = Point(0, 0)
       val cluster = Point(0.5, 0.5)
-      assert(VarianceMinimizingLlyod.cluster(Set(point1, point2), 1) == Map(cluster -> Set(point1, point2)))
+      assert(kMeans.cluster(Set(point1, point2), 1) == Map(cluster -> Set(point1, point2)))
 
       val (a, b, c, d, e, f) =
         (Point(0, 0),
@@ -27,9 +27,9 @@ class VarianceMinimizingSpec extends WordSpecLike {
       val cluster2 = Point(0.3333333333333333, 0.6666666666666666)
 
       val set = Set(d, a, c, f, e, b)
-      assert(VarianceMinimizingLlyod.cluster(set, 2) == Map(cluster1 -> Set(d, e, f), cluster2 -> Set(a, b, c)))
+      assert(kMeans.cluster(set, 2) == Map(cluster1 -> Set(d, e, f), cluster2 -> Set(a, b, c)))
 
-      assert(VarianceMinimizingLlyod.cluster(Set(Point(1, 1)), 1) == Map(Point(1,1) -> Set(Point(1, 1))))
+      assert(kMeans.cluster(Set(Point(1, 1)), 1) == Map(Point(1,1) -> Set(Point(1, 1))))
     }
 
   }
