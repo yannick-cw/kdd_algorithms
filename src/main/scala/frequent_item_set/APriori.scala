@@ -1,5 +1,7 @@
 package frequent_item_set
 
+import scala.annotation.tailrec
+
 /**
   * Created by yannick on 26.04.16.
   */
@@ -8,16 +10,17 @@ object APriori {
   def getFrequentItemSet[A](itemSets: Seq[Seq[A]], support: Int)(implicit ev: A => Ordered[A]): Seq[(Seq[A], Int)] = {
     val itemFrequency = itemSets.flatten.distinct.sorted.map(Seq(_))
 
-    def run(itemSet: Seq[Seq[A]]): Seq[(Seq[A], Int)] = itemSet match {
-      case Nil => Nil
-      case lastElement if lastElement.size == 1 => Nil
+    @tailrec
+    def run(itemSet: Seq[Seq[A]], agg: Seq[(Seq[A], Int)]): Seq[(Seq[A], Int)] = itemSet match {
+      case Nil => agg
+      case lastElement if lastElement.size == 1 => agg
       case _ =>
         val candidates = generateCandidates(itemSet)
         val candidatesFrequency = getCandidatesFrequency(itemSets, candidates)
         val candidatesWithSupport = candidatesFrequency.filter(_._2 > support)
-        candidatesWithSupport ++ run(candidatesWithSupport.map(_._1))
+        run(candidatesWithSupport.map(_._1), agg ++ candidatesWithSupport)
     }
-    run(itemFrequency)
+    run(itemFrequency,  Seq.empty[(Seq[A], Int)])
   }
 
   private def getCandidatesFrequency[A](itemSets: Seq[Seq[A]], candidates: Seq[Seq[A]]): Seq[(Seq[A], Int)] = {
