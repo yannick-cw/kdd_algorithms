@@ -35,8 +35,8 @@ class APrioriSpec extends WordSpecLike {
         (List("beer", "milk", "butter"), 3)))
 
       assert(APriori.getFrequentItemSet(shopping, 3) == Seq(
-        (List("beer", "butter"), 5),
-        (List("butter", "milk"), 4)))
+        (List("butter", "milk"), 4),
+        (List("beer", "butter"), 5)))
     }
   }
 }

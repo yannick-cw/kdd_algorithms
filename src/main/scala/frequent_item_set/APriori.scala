@@ -7,8 +7,9 @@ import scala.annotation.tailrec
   */
 object APriori {
 
+
   def getFrequentItemSet[A](itemSets: Seq[Seq[A]], support: Int)(implicit ev: A => Ordered[A]): Seq[(Seq[A], Int)] = {
-    val itemFrequency = itemSets.flatten.distinct.sorted.map(Seq(_))
+    val itemFrequency = getCandidatesFrequency(itemSets, itemSets.flatten.distinct.sorted.map(Seq(_))).filter(_._2 > support).map(_._1)
 
     @tailrec
     def run(itemSet: Seq[Seq[A]], agg: Seq[(Seq[A], Int)]): Seq[(Seq[A], Int)] = itemSet match {
@@ -16,7 +17,8 @@ object APriori {
       case lastElement if lastElement.size == 1 => agg
       case _ =>
         val candidates = generateCandidates(itemSet)
-        val candidatesFrequency = getCandidatesFrequency(itemSets, candidates)
+        val prunedCandidates = prune(candidates, itemSet)
+        val candidatesFrequency = getCandidatesFrequency(itemSets, prunedCandidates)
         val candidatesWithSupport = candidatesFrequency.filter(_._2 > support)
         run(candidatesWithSupport.map(_._1), agg ++ candidatesWithSupport)
     }
@@ -34,6 +36,14 @@ object APriori {
       .mapValues(_.size)
       .toSeq
   }
+
+  def prune[A](candidates: Seq[Seq[A]], oldCandidates: Seq[Seq[A]]): Seq[Seq[A]] = {
+    candidates.filter{ candidate =>
+      val subSets = for (i <- candidate.indices) yield candidate.take(i) ++ candidate.drop(i+1)
+      subSets.forall(sub => oldCandidates.map(_.toSet).contains(sub.toSet))
+    }
+  }
+
 
   private def generateCandidates[A](itemSets: Seq[Seq[A]]): Seq[Seq[A]] = {
     val itemSetLength = itemSets.head.length
