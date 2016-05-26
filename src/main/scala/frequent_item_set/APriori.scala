@@ -9,7 +9,7 @@ object APriori {
 
 
   def getFrequentItemSet[A](itemSets: Seq[Seq[A]], support: Int)(implicit ev: A => Ordered[A]): Seq[(Seq[A], Int)] = {
-    val itemFrequency = getCandidatesFrequency(itemSets, itemSets.flatten.distinct.sorted.map(Seq(_))).filter(_._2 > support).map(_._1)
+    val itemFrequency = getCandidatesFrequency(itemSets, itemSets.flatten.distinct.map(Seq(_))).filter(_._2 > support).flatMap(_._1).sorted.map(Seq(_))
 
     @tailrec
     def run(itemSet: Seq[Seq[A]], agg: Seq[(Seq[A], Int)]): Seq[(Seq[A], Int)] = itemSet match {

@@ -51,7 +51,7 @@ case class Point(x: Double, y: Double) extends Ordered[Point] {
   }
 
   def getNearestCentroid(centroids: Set[Point]): Point = {
-    centroids.map(cent => (cent, this.distLeastSquares(cent)))
+    centroids.map(cent => (cent, this.distManhatten(cent)))
       .minBy{case (centroid, dist) => dist}._1
   }
 
